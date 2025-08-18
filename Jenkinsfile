@@ -17,7 +17,7 @@ pipeline {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'   // The ID you gave in Jenkins
+                    credentialsId: 'Jenkinsfile'   // The ID you gave in Jenkins
                 ]]) {
                     sh 'terraform init'
                 }
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
+                    credentialsId: 'Jenkinsfile'
                 ]]) {
                     sh 'terraform plan -out=tfplan'
                 }
@@ -45,7 +45,7 @@ pipeline {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
+                    credentialsId: 'Jenkinsfile'
                 ]]) {
                     sh 'terraform apply -auto-approve tfplan'
                 }
