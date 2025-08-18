@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = "ap-south-1"   // change if needed
+        AWS_DEFAULT_REGION = "us-east-1"   // change to your AWS region
     }
 
     stages {
@@ -15,32 +15,25 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                withAWS(credentials: 'aws-creds', region: "${AWS_REGION}") {
-                    sh 'terraform init'
-                }
-            }
-        }
-
-        stage('Terraform Validate') {
-            steps {
-                sh 'terraform validate'
+                sh 'terraform init'
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                withAWS(credentials: 'aws-creds', region: "${AWS_REGION}") {
-                    sh 'terraform plan -out=tfplan'
-                }
+                sh 'terraform plan -out=tfplan'
+            }
+        }
+
+        stage('Approval') {
+            steps {
+                input message: "Apply Terraform changes?", ok: "Yes, apply"
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                input message: 'Do you want to apply these changes?', ok: 'Yes, apply'
-                withAWS(credentials: 'aws-creds', region: "${AWS_REGION}") {
-                    sh 'terraform apply -auto-approve tfplan'
-                }
+                sh 'terraform apply -auto-approve tfplan'
             }
         }
     }
