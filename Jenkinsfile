@@ -19,7 +19,7 @@ pipeline {
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'Jenkinsfile'   // The ID you gave in Jenkins
                 ]]) {
-                    sh 'terraform init'
+                    bat 'terraform init'
                 }
             }
         }
@@ -30,7 +30,7 @@ pipeline {
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'Jenkinsfile'
                 ]]) {
-                    sh 'terraform plan -out=tfplan'
+                    bat 'terraform plan -out=tfplan'
                 }
             }
         }
@@ -47,7 +47,7 @@ pipeline {
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'Jenkinsfile'
                 ]]) {
-                    sh 'terraform apply -auto-approve tfplan'
+                    bat 'terraform apply -auto-approve tfplan'
                 }
             }
         }
