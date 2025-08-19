@@ -3,5 +3,5 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "mybucket" {
-  bucket = "avi-terraform-bucket-171717"
+  bucket = "avi-terraform-bucket-171756717"
 }
