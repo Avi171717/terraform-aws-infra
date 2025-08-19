@@ -15,9 +15,9 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                withCredentials([[
+                withCredentials([[ 
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'Jenkinsfile'   // The ID you gave in Jenkins
+                    credentialsId: 'Jenkinsfile'   // ✅ your credential ID
                 ]]) {
                     bat 'terraform init'
                 }
@@ -26,7 +26,7 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                withCredentials([[
+                withCredentials([[ 
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'Jenkinsfile'
                 ]]) {
@@ -43,11 +43,32 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                withCredentials([[
+                withCredentials([[ 
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'Jenkinsfile'
                 ]]) {
                     bat 'terraform apply -auto-approve tfplan'
+                }
+            }
+        }
+
+        stage('Destroy Approval') {
+            steps {
+                input message: "Do you want to destroy resources?", ok: "Yes, destroy"
+            }
+        }
+
+        stage('Terraform Destroy') {
+            steps {
+                withCredentials([[ 
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'Jenkinsfile'
+                ]]) {
+                    // 🔹 Destroy everything
+                    bat 'terraform destroy -auto-approve'
+
+                    // OR destroy specific resource (example: S3 bucket)
+                    // bat 'terraform destroy -target=aws_s3_bucket.my_bucket -auto-approve'
                 }
             }
         }
